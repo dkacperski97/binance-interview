@@ -1,15 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TradesService } from './trades.service';
 import { TradesController } from './trades.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Trade, TradeSchema } from './trades.schema';
 import { BinanceModule } from '../binance/binance.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Trade.name, schema: TradeSchema }]),
-    BinanceModule,
-  ],
+  imports: [BinanceModule],
   providers: [TradesService],
   controllers: [TradesController],
 })
