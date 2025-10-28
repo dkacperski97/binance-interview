@@ -33,10 +33,13 @@ export class TradesService {
         const oldTradeData = data[i - 1];
         const newTradeData = data[i];
 
-        const priceChange = this.getPriceChange(
-          Number(oldTradeData.p),
-          Number(newTradeData.p),
-        );
+        let priceChange: number | undefined = undefined;
+        if (oldTradeData.p !== undefined && newTradeData.p !== undefined) {
+          priceChange = this.getPriceChange(
+            Number(oldTradeData.p),
+            Number(newTradeData.p),
+          );
+        }
 
         result.push({ ...this.mapTradeToResponse(newTradeData), priceChange });
       }
