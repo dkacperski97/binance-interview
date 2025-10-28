@@ -19,7 +19,6 @@ export class TradesService {
     try {
       const response = await this.binanceService.client.restAPI.aggTrades({
         symbol,
-        limit: 5,
         startTime,
         endTime,
       });
