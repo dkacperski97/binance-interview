@@ -31,9 +31,10 @@ export class TradesService {
         const oldTradeData = data[i - 1];
         const newTradeData = data[i];
 
-        const priceChange =
-          (Number(newTradeData.p) - Number(oldTradeData.p)) /
-          Number(oldTradeData.p);
+        const priceChange = this.getPriceChange(
+          Number(oldTradeData.p),
+          Number(newTradeData.p),
+        );
 
         result.push({ ...this.mapTradeToResponse(newTradeData), priceChange });
       }
@@ -41,6 +42,10 @@ export class TradesService {
     } catch (error) {
       throw new Error(`Error getting recent trades: ${error}`);
     }
+  }
+
+  private getPriceChange(oldPrice: number, newPrice: number) {
+    return (newPrice - oldPrice) / oldPrice;
   }
 
   private mapTradeToResponse(
