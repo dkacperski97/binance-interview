@@ -77,4 +77,13 @@ describe('TradesService', () => {
     );
     expect(result).toHaveLength(0);
   });
+
+  it("should throw error when binance api doesn't work", async () => {
+    binanceServiceMock.client.restAPI.aggTrades = jest.fn(() => {
+      throw new Error('test error');
+    });
+    await expect(
+      service.getRecentTrades(symbol, startTime, endTime),
+    ).rejects.toThrow(Error);
+  });
 });
