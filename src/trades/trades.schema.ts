@@ -8,6 +8,8 @@ export class Trade extends Document {
   @Prop() qty: number;
   @Prop() isBuyerMaker: boolean;
   @Prop() time: number;
+  @Prop() bought: boolean;
+  @Prop() sold: boolean;
 }
 
 export const TradeSchema = SchemaFactory.createForClass(Trade);
