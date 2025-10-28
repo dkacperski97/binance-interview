@@ -1,32 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { SpotRestAPI } from '@binance/spot';
-import { InjectModel } from '@nestjs/mongoose';
-import { Trade } from './trades.schema';
-import { Model } from 'mongoose';
 import { BinanceService } from 'src/binance/binance.service';
 
+interface GetRecentTradesResponse {
+  aggregateTradeId?: number;
+  priceChange?: number;
+  price?: string;
+}
 @Injectable()
 export class TradesService {
-  constructor(
-    @InjectModel(Trade.name) private tradeModel: Model<Trade>,
-    private binanceService: BinanceService,
-  ) {}
+  constructor(private binanceService: BinanceService) {}
 
   async getRecentTrades(
     symbol: string,
-  ): Promise<SpotRestAPI.GetTradesResponse> {
+    startTime: number,
+    endTime: number,
+  ): Promise<GetRecentTradesResponse[]> {
     try {
-      const response = await this.binanceService.client.restAPI.getTrades({
+      const response = await this.binanceService.client.restAPI.aggTrades({
         symbol,
         limit: 5,
+        startTime,
+        endTime,
       });
       const data = await response.data();
-      await this.tradeModel.insertMany(
-        data.map((trade) => ({ ...trade, symbol })),
-      );
-      return data;
+      const result: GetRecentTradesResponse[] = [
+        this.mapTradeToResponse(data[0]),
+      ];
+      for (let i = 1; i < data.length; i++) {
+        const oldTradeData = data[i - 1];
+        const newTradeData = data[i];
+
+        const priceChange =
+          (Number(newTradeData.p) - Number(oldTradeData.p)) /
+          Number(oldTradeData.p);
+
+        result.push({ ...this.mapTradeToResponse(newTradeData), priceChange });
+      }
+      return result;
     } catch (error) {
       throw new Error(`Error getting recent trades: ${error}`);
     }
+  }
+
+  private mapTradeToResponse(
+    trade: SpotRestAPI.AggTradesResponseInner,
+  ): GetRecentTradesResponse {
+    return {
+      aggregateTradeId: trade.a,
+      price: trade.p,
+    };
   }
 }

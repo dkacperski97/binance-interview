@@ -9,7 +9,9 @@ export class TradesController {
   @Get()
   async getRecentTrades(
     @Query('symbol') symbol: string,
+    @Query('startTime') startTime: number,
+    @Query('endTime') endTime: number,
   ): Promise<SpotRestAPI.GetTradesResponse> {
-    return this.tradesService.getRecentTrades(symbol);
+    return this.tradesService.getRecentTrades(symbol, startTime, endTime);
   }
 }
