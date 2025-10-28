@@ -19,3 +19,8 @@ or
 ```
 npm run start:dev
 ```
+
+To launch tests run
+```
+npm run test
+```
