@@ -23,6 +23,9 @@ export class TradesService {
         endTime,
       });
       const data = await response.data();
+      if (data.length === 0) {
+        return [];
+      }
       const result: GetRecentTradesResponse[] = [
         this.mapTradeToResponse(data[0]),
       ];
