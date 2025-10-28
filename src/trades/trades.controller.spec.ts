@@ -40,9 +40,21 @@ describe('TradesController', () => {
     expect(tradesServiceMock.getRecentTrades).toHaveBeenCalledTimes(1);
   });
 
-  it.skip('should throw when symbol is undefined', () => {
-    expect(async () => {
-      await controller.getRecentTrades(undefined, startTime, endTime);
-    }).toThrow(BadRequestException);
+  it('should throw when symbol is undefined', async () => {
+    await expect(
+      controller.getRecentTrades(undefined, startTime, endTime),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should throw when startTime is undefined', async () => {
+    await expect(
+      controller.getRecentTrades(symbol, undefined, endTime),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should throw when endTime is undefined', async () => {
+    await expect(
+      controller.getRecentTrades(symbol, startTime, undefined),
+    ).rejects.toThrow(BadRequestException);
   });
 });
