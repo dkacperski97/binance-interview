@@ -8,9 +8,9 @@ export class TradesController {
 
   @Get()
   async getRecentTrades(
-    @Query('symbol') symbol: string,
-    @Query('startTime') startTime: number,
-    @Query('endTime') endTime: number,
+    @Query('symbol') symbol?: string,
+    @Query('startTime') startTime?: number,
+    @Query('endTime') endTime?: number,
   ): Promise<SpotRestAPI.GetTradesResponse> {
     if (symbol === undefined) {
       throw new BadRequestException("Missing required query param: 'symbol'");
