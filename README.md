@@ -20,6 +20,11 @@ or
 npm run start:dev
 ```
 
+After launching the app you can call api endpoint. Bash example:
+```
+curl "localhost:3000/trades?symbol=BTCUSDT&startTime=1761640987662&endTime=1761640987662"
+```
+
 To launch tests run
 ```
 npm run test
